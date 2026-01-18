@@ -1,0 +1,29 @@
+syntax = "proto3";
+package proto;
+
+option go_package = "gokitaddsrv/proto";
+
+service AddSrv {
+  rpc Add(AddReq) returns (AddResp);
+  rpc Concat(ConcatReq) returns (ConcatResp);
+}
+
+message AddReq {
+  int32 a = 1;
+  int32 b = 2;
+}
+
+message AddResp {
+  int32 sum = 1;
+  string err = 2;
+}
+
+message ConcatReq {
+    string a = 1;
+    string b = 2;
+}
+
+message ConcatResp {
+    string res = 1;
+    string err = 2;
+}

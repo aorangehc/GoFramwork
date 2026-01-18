@@ -7,9 +7,9 @@ import (
 	"net/http"
 
 	"github.com/go-kit/kit/endpoint"
-	httptransport "github.com/go-kit/kit/transport/http"
 )
 
+// Service层
 type AddService interface {
 	Add(ctx context.Context, a, b int) (int, error)
 	Concat(ctx context.Context, a, b string) (string, error)
@@ -28,6 +28,7 @@ func (s *addService) Concat(_ context.Context, a, b string) (string, error) {
 	return a + b, nil
 }
 
+// Endpoint层
 type SumRequest struct {
 	A int `json:"a"`
 	B int `json:"b"`
@@ -70,6 +71,7 @@ func makeConcatEndpoint(svc AddService) endpoint.Endpoint {
 	}
 }
 
+// Transport层
 func decodeSumRequest(_ context.Context, r *http.Request) (interface{}, error) {
 	var req SumRequest
 	if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
@@ -88,27 +90,4 @@ func decodeConcatRequest(_ context.Context, r *http.Request) (interface{}, error
 
 func encodeResponse(_ context.Context, w http.ResponseWriter, response interface{}) error {
 	return json.NewEncoder(w).Encode(response)
-}
-
-func main() {
-	svc := &addService{}
-	sumEndpoint := makeSumEndpoint(svc)
-	concatEndpoint := makeConcatEndpoint(svc)
-
-	sumHandler := httptransport.NewServer(
-		sumEndpoint,
-		decodeSumRequest,
-		encodeResponse,
-	)
-
-	concatHandler := httptransport.NewServer(
-		concatEndpoint,
-		decodeConcatRequest,
-		encodeResponse,
-	)
-
-	http.Handle("/sum", sumHandler)
-	http.Handle("/concat", concatHandler)
-
-	http.ListenAndServe(":8080", nil)
 }
