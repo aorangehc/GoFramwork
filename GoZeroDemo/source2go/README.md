@@ -1,0 +1,1 @@
+通过goctl将api和proto文件生成go项目代码
