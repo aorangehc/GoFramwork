@@ -1,0 +1,25 @@
+// 暴露一个 user 服务对外接口，获取用户信息
+
+syntax = "proto3";
+
+option go_package = "./user";
+
+// 定义请求结构体
+message GetUserInfoRequest {
+    int64 user_id = 1; // 用户ID
+}
+
+// 定义响应结构体
+message GetUserInfoResponse {
+    int64 user_id = 1; // 用户ID
+    string user_name = 2; // 用户名
+    int64 gender = 3; // 用户性别
+}
+
+// 定义 UserService 服务
+service UserService {
+    // 获取用户信息
+    rpc GetUserInfo(GetUserInfoRequest) returns (GetUserInfoResponse); 
+}
+
+
