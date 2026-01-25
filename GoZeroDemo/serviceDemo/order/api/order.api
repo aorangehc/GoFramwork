@@ -1,57 +1,58 @@
 syntax = "v1"
 
 info (
-    title: "订单服务简单 demo"
-    author: "aorangehc"
-    date: "2025年 11 月 11 日"
-    version: "v1"
+	title:   "订单服务简单 demo"
+	author:  "aorangehc"
+	date:    "2025年 11 月 11 日"
+	version: "v1"
 )
 
 // 创建订单
 type CreateReq {
-    UserId int64 `json:"userId"`
-    GoodsId int64 `json:"goodsId"`
-    Num int64 `json:"num"`
-    Amount int64 `json:"amount"`
+	UserId  int64 `json:"userId"`
+	GoodsId int64 `json:"goodsId"`
+	Num     int64 `json:"num"`
+	Amount  int64 `json:"amount"`
 }
 
 type CreateResp {
-    OrderSn string `json:"orderSn"`
+	OrderSn string `json:"orderSn"`
 }
 
 // 查看订单详情
 type DetailReq {
-    OrderSn string `json:"orderSn"`
+	OrderSn string `json:"orderSn"`
 }
 
 type DetailResp {
-    OrderSn string `json:"orderSn"`
-    UserId int64 `json:"userId"`
-    GoodsId int64 `json:"goodsid"`
-    Num int64 `json:"num"`
-    Amount int64 `json:"amount"`
-    Status int64 `json:"status"`
-    CreateAt string `json:"createAt"`
+	OrderSn  string `json:"orderSn"`
+	UserId   int64  `json:"userId"`
+	GoodsId  int64  `json:"goodsid"`
+	Num      int64  `json:"num"`
+	Amount   int64  `json:"amount"`
+	Status   int64  `json:"status"`
+	CreateAt string `json:"createAt"`
 }
 
 // 删除订单
 type DeleteReq {
-    userId int64 `json:"userId"`
-    OrderSn string `json:"orderSn"`
+	userId  int64  `json:"userId"`
+	OrderSn string `json:"orderSn"`
 }
 
 type DeleteResp {
-    success bool `json:"success"`
-    Message string `json:"message"`
+	success bool   `json:"success"`
+	Message string `json:"message"`
 }
 
 service order-api {
-    @handler create
-    post /api/order/create (CreateReq) returns (CreateResp)
+	@handler create
+	post /api/order/create (CreateReq) returns (CreateResp)
 
-    @handler detail
-    get /api/order/:orderSn (DetailReq) returns (DetailResp)
+	@handler detail
+	get /api/order/:orderSn (DetailReq) returns (DetailResp)
 
-    @handler delete
-    delete /api/order/delete (DeleteReq) returns (DeleteResp)
+	@handler delete
+	delete /api/order/delete (DeleteReq) returns (DeleteResp)
 }
+

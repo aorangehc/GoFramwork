@@ -2,75 +2,76 @@ syntax = "v1"
 
 // 进行项目的简单说明
 info (
-    title: "实现简单的用户服务"
-    author: "aorangehc"
-    date: "2025年 11 月 11 日"
-    version : "v1"
+	title:   "实现简单的用户服务"
+	author:  "aorangehc"
+	date:    "2025年 11 月 11 日"
+	version: "v1"
 )
 
 // 注册需要用户名、密码、手机号码，要做唯一性检测
 type RegisterReq {
-    UserName string `json:"username"`
-    Password string `json:"password"`
-    Mobile string `json:"mobile"`
-    Gender string `json:"gender"` // male|female|unknown
-    NickName string `json:"nickname"`
+	UserName string `json:"username"`
+	Password string `json:"password"`
+	Mobile   string `json:"mobile"`
+	Gender   string `json:"gender"` // male|female|unknown
+	NickName string `json:"nickname"`
 }
 
 type RegisterResp {
-    success bool `json:"success"` // 注册是否成功
-    Message string `json:"message"` // 注册报错信息
-    Id int64 `json:"id"` // 成功注册返回的 id
+	success bool   `json:"success"` // 注册是否成功
+	Message string `json:"message"` // 注册报错信息
+	Id      int64  `json:"id"` // 成功注册返回的 id
 }
 
 type LoginReq {
-    UserName string `json:"username"`
-    Password string `json:"password"`  
+	UserName string `json:"username"`
+	Password string `json:"password"`
 }
 
 type LoginResp {
-    Token string `json:"token"`
+	Token string `json:"token"`
 }
 
 type UserInfoReq {
-    Id int64 `json:"id"`
-    Id int64 `json:"token"`
+	Id int64 `json:"id"`
+	Id int64 `json:"token"`
 }
 
 type UserInfoResp {
-    Id int64 `json:"id"`
-    Token string `json:"token"`
-    UserName string `json:"username"`
-    Mobile string `json:"mobile"`
-    Gender string `json:"gender"`
-    NickName string `json:"nickname"`
-    CreateAt string `json:"createAt"` // 注册时间
-    UpdateAt string `json:"updateAt"` // 最后更新时间
+	Id       int64  `json:"id"`
+	Token    string `json:"token"`
+	UserName string `json:"username"`
+	Mobile   string `json:"mobile"`
+	Gender   string `json:"gender"`
+	NickName string `json:"nickname"`
+	CreateAt string `json:"createAt"` // 注册时间
+	UpdateAt string `json:"updateAt"` // 最后更新时间
 }
 
 // 用户信息更新
 type UserUpdateReq {
-    Id int64 `json:"id"`
-    UserName string `json:"username"`
-    Password string `json:"password"`
-    Mobile string `json:"mobile"`
-    Gender string `json:"gender"` // male|female|unknown
-    NickName string `json:"nickname"`
+	Id       int64  `json:"id"`
+	UserName string `json:"username"`
+	Password string `json:"password"`
+	Mobile   string `json:"mobile"`
+	Gender   string `json:"gender"` // male|female|unknown
+	NickName string `json:"nickname"`
 }
 
 type UserUpdateResp {
-    success bool `json:"success"`
-    Message string `json:"message"` // 更新报错信息 
+	success bool   `json:"success"`
+	Message string `json:"message"` // 更新报错信息
 }
 
 // 定义用户服务的 Api
 service user-api {
-    @handler register
-    post /api/user/register (RegisterReq) returns (RegisterResp)
+	@handler register
+	post /api/user/register (RegisterReq) returns (RegisterResp)
 
-    @handler login
-    post /api/user/login (LoginReq) returns (LoginResp)
+	@handler login
+	post /api/user/login (LoginReq) returns (LoginResp)
 
-    @handler userInfo // 获取用户信息
-    get /api/user/:id (UserInfoReq) returns (UserInfoResp)
+	@handler userInfo // 获取用户信息
+	get /api/user/:id (UserInfoReq) returns (UserInfoResp)
 }
+
