@@ -27,8 +27,8 @@ type RegisterResp struct {
 }
 
 type UserInfoReq struct {
-	Id int64 `json:"id"`
-	Id int64 `json:"token"`
+	Id    int64 `json:"id"`
+	Token int64 `json:"token"`
 }
 
 type UserInfoResp struct {

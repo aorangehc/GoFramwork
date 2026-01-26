@@ -34,7 +34,7 @@ type LoginResp {
 
 type UserInfoReq {
 	Id int64 `json:"id"`
-	Id int64 `json:"token"`
+	Token int64 `json:"token"`
 }
 
 type UserInfoResp {
