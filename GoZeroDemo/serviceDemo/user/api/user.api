@@ -10,11 +10,12 @@ info (
 
 // 注册需要用户名、密码、手机号码，要做唯一性检测
 type RegisterReq {
-	UserName string `json:"username"`
-	Password string `json:"password"`
-	Mobile   string `json:"mobile"`
-	Gender   string `json:"gender"` // male|female|unknown
-	NickName string `json:"nickname"`
+	UserName   string `json:"username"`
+	Password   string `json:"password"`
+	Repassword string `json:"re_password"`
+	Mobile     string `json:"mobile"`
+	Gender     int    `json:"gender,options=0|1|2,default=0"` // male|female|unknown
+	NickName   string `json:"nickname"`
 }
 
 type RegisterResp {
@@ -33,7 +34,7 @@ type LoginResp {
 }
 
 type UserInfoReq {
-	Id int64 `json:"id"`
+	Id    int64 `json:"id"`
 	Token int64 `json:"token"`
 }
 
