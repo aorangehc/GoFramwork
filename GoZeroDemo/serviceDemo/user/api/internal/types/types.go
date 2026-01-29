@@ -37,7 +37,7 @@ type UserInfoResp struct {
 	Token    string `json:"token"`
 	UserName string `json:"username"`
 	Mobile   string `json:"mobile"`
-	Gender   string `json:"gender"`
+	Gender   int    `json:"gender,options=0|1|2,default=0"` // male|female|unknown
 	NickName string `json:"nickname"`
 	CreateAt string `json:"createAt"` // 注册时间
 	UpdateAt string `json:"updateAt"` // 最后更新时间
@@ -48,7 +48,7 @@ type UserUpdateReq struct {
 	UserName string `json:"username"`
 	Password string `json:"password"`
 	Mobile   string `json:"mobile"`
-	Gender   string `json:"gender"` // male|female|unknown
+	Gender   int    `json:"gender,options=0|1|2,default=0"` // male|female|unknown
 	NickName string `json:"nickname"`
 }
 

@@ -3,7 +3,7 @@ CREATE TABLE `user` (
     name varchar(255) NULL COMMENT '用户名',
     password varchar(255) NOT NULL DEFAULT '' COMMENT '密码',
     mobile varchar(255) NOT NULL DEFAULT '' COMMENT '手机号码',
-    gender char(10) NOT NULL DEFAULT 'male' COMMENT '性别,male|female|unknown',
+    gender  int NOT NULL DEFAULT 0 COMMENT '性别,male 0 |female 1|unknown 2',
     nickname varchar(255) NULL DEFAULT '' COMMENT '昵称',
     type tinyint(1) NULL DEFAULT 0 COMMENT '用户类型, 0:普通用户,1:VIP用户,用于测试golang关键字',
     create_at timestamp NULL,

@@ -5,15 +5,22 @@ package logic
 
 import (
 	"context"
+	"crypto/md5"
 	"database/sql"
+	"encoding/hex"
+	"errors"
 	"fmt"
+	"time"
 
 	"gozeroservicedemo/user/api/internal/svc"
 	"gozeroservicedemo/user/api/internal/types"
 	"gozeroservicedemo/user/sql/model"
 
 	"github.com/zeromicro/go-zero/core/logx"
+	"github.com/zeromicro/go-zero/core/stores/sqlx"
 )
+
+var secret = []byte("I Like Kabocha")
 
 type RegisterLogic struct {
 	logx.Logger
@@ -30,29 +37,55 @@ func NewRegisterLogic(ctx context.Context, svcCtx *svc.ServiceContext) *Register
 }
 
 func (l *RegisterLogic) Register(req *types.RegisterReq) (resp *types.RegisterResp, err error) {
-	// 实现注册，将用户信息写到数据库中，并进行唯一性检查
-	if len(req.UserName) == 0 || len(req.Password) == 0 {
+	// 验证参数合法性
+	// 雪花算法生成用户ID
+	// 加密加盐
+
+	// 参数校验--简单
+	if len(req.UserName) == 0 || len(req.Password) == 0 || len(req.Repassword) == 0 {
 		return nil, fmt.Errorf("用户名和密码不能为空")
 	}
-	// 雪花算法生成用户ID
-	// userId := l.svcCtx.Config.Snowflake.Start()
-	// 检查用户名是否存在
-	var id int64
-	id = 111
-	_, err = l.svcCtx.UserModel.Insert(l.ctx, &model.User{
-		Id:       id,
+	if len(req.Mobile) == 0 {
+		return nil, fmt.Errorf("手机号不能为空")
+	} // 实际业务场景下手机号的校验还是很复杂的，需要进行正则表达式校验
+	if req.Password != req.Repassword {
+		return nil, fmt.Errorf("两次输入的密码不一致")
+	}
+
+	// 判断用户是否存在
+	u, err := l.svcCtx.UserModel.FindOneByName(l.ctx, sql.NullString{String: req.UserName, Valid: true})
+	// 查询失败
+	if err == nil && err != sqlx.ErrNotFound {
+		return nil, errors.New("内部错误")
+	}
+	// 查到了
+	if u != nil {
+		return nil, errors.New("用户已存在")
+	}
+	// 没查到，可以创建
+
+	// 加密加盐
+	h := md5.New()
+	h.Write([]byte(req.Password))
+	h.Write(secret)
+	passwordStr := hex.EncodeToString(h.Sum(nil))
+
+	user := &model.User{
+		Id:       time.Now().Unix(),
 		Name:     sql.NullString{String: req.UserName, Valid: true}, // 假设用户名不能为空
-		Password: req.Password,                                      //不能存储明文密码，实际项目中需要加密
+		Password: passwordStr,                                       //不能存储明文密码，实际项目中需要加密
 		Mobile:   req.Mobile,
-		Gender:   req.Gender,
+		Gender:   int64(req.Gender),
 		Nickname: req.NickName,
-	})
+	}
+
+	_, err = l.svcCtx.UserModel.Insert(l.ctx, user)
 	if err != nil {
 		return nil, err
 	}
 	return &types.RegisterResp{
 		Success: true,
 		Message: "注册成功",
-		Id:      id,
+		Id:      user.Id,
 	}, nil
 }

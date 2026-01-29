@@ -3,4 +3,4 @@ Host: 0.0.0.0
 Port: 8888
 
 Mysql:
-  DataSource: "root:123456@tcp(127.0.0.1:3307)/user_order"
+  DataSource: "root:123456@tcp(127.0.0.1:3307)/user_order?charset=utf8mb4&parseTime=True&loc=Local"

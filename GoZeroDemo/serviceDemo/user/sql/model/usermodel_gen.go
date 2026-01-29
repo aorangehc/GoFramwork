@@ -43,7 +43,7 @@ type (
 		Name     sql.NullString `db:"name"`     // 用户名
 		Password string         `db:"password"` // 密码
 		Mobile   string         `db:"mobile"`   // 手机号码
-		Gender   string         `db:"gender"`   // 性别,male|female|unknown
+		Gender   int64          `db:"gender"`   // 性别,male 0 |female 1|unknown 2
 		Nickname string         `db:"nickname"` // 昵称
 		Type     int64          `db:"type"`     // 用户类型, 0:普通用户,1:VIP用户,用于测试golang关键字
 		CreateAt sql.NullTime   `db:"create_at"`
