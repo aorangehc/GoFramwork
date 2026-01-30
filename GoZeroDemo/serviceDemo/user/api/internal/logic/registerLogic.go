@@ -14,7 +14,7 @@ import (
 
 	"gozeroservicedemo/user/api/internal/svc"
 	"gozeroservicedemo/user/api/internal/types"
-	"gozeroservicedemo/user/sql/model"
+	"gozeroservicedemo/user/sql/cachemodel"
 
 	"github.com/zeromicro/go-zero/core/logx"
 	"github.com/zeromicro/go-zero/core/stores/sqlx"
@@ -54,6 +54,9 @@ func (l *RegisterLogic) Register(req *types.RegisterReq) (resp *types.RegisterRe
 
 	// 判断用户是否存在
 	u, err := l.svcCtx.UserModel.FindOneByName(l.ctx, sql.NullString{String: req.UserName, Valid: true})
+
+	// 在这里使用缓存模型进行查询
+
 	// 查询失败
 	if err == nil && err != sqlx.ErrNotFound {
 		return nil, errors.New("内部错误")
@@ -70,7 +73,7 @@ func (l *RegisterLogic) Register(req *types.RegisterReq) (resp *types.RegisterRe
 	h.Write(secret)
 	passwordStr := hex.EncodeToString(h.Sum(nil))
 
-	user := &model.User{
+	user := &cachemodel.User{
 		Id:       time.Now().Unix(),
 		Name:     sql.NullString{String: req.UserName, Valid: true}, // 假设用户名不能为空
 		Password: passwordStr,                                       //不能存储明文密码，实际项目中需要加密

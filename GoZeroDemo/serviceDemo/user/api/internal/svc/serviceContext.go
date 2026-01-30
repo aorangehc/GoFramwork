@@ -5,14 +5,14 @@ package svc
 
 import (
 	"gozeroservicedemo/user/api/internal/config"
-	"gozeroservicedemo/user/sql/model"
+	"gozeroservicedemo/user/sql/cachemodel"
 
 	"github.com/zeromicro/go-zero/core/stores/sqlx"
 )
 
 type ServiceContext struct {
 	Config    config.Config
-	UserModel model.UserModel
+	UserModel cachemodel.UserModel
 }
 
 func NewServiceContext(c config.Config) *ServiceContext {
@@ -20,6 +20,6 @@ func NewServiceContext(c config.Config) *ServiceContext {
 
 	return &ServiceContext{
 		Config:    c,
-		UserModel: model.NewUserModel(sqlxConn),
+		UserModel: cachemodel.NewUserModel(sqlxConn, c.CacheRedis),
 	}
 }
