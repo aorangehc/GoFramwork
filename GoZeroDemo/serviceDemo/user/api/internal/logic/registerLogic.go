@@ -43,6 +43,7 @@ func (l *RegisterLogic) Register(req *types.RegisterReq) (resp *types.RegisterRe
 
 	// 参数校验--简单
 	if len(req.UserName) == 0 || len(req.Password) == 0 || len(req.Repassword) == 0 {
+		logx.Info("注册失败")
 		return nil, fmt.Errorf("用户名和密码不能为空")
 	}
 	if len(req.Mobile) == 0 {
@@ -51,6 +52,7 @@ func (l *RegisterLogic) Register(req *types.RegisterReq) (resp *types.RegisterRe
 	if req.Password != req.Repassword {
 		return nil, fmt.Errorf("两次输入的密码不一致")
 	}
+	logx.Infof("req: %#v", req)
 
 	// 判断用户是否存在
 	u, err := l.svcCtx.UserModel.FindOneByName(l.ctx, sql.NullString{String: req.UserName, Valid: true})
@@ -58,7 +60,8 @@ func (l *RegisterLogic) Register(req *types.RegisterReq) (resp *types.RegisterRe
 	// 在这里使用缓存模型进行查询
 
 	// 查询失败
-	if err == nil && err != sqlx.ErrNotFound {
+	if err != nil && err != sqlx.ErrNotFound {
+		logx.Errorw("user_Redister_UserModel.FindOneByName error", logx.Field("err", err))
 		return nil, errors.New("内部错误")
 	}
 	// 查到了
