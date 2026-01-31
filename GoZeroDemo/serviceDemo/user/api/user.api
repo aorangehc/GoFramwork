@@ -79,11 +79,15 @@ service user-api {
 }
 
 @server (
-	prefix: api
-	jwt:    Auth
+	prefix:     api
+	jwt:        Auth
+	middleware: Cost // 耗时统计的一个中间件
 )
 service user-api {
 	@handler userInfo // 获取用户信息
 	get /user/:id (UserInfoReq) returns (UserInfoResp)
+
+	@handler userUpdate // 更新用户信息
+	post /user/update (UserUpdateReq) returns (UserUpdateResp)
 }
 
