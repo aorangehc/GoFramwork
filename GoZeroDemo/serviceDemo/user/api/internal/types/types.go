@@ -9,7 +9,10 @@ type LoginReq struct {
 }
 
 type LoginResp struct {
-	Token string `json:"token"`
+	Message      string `json:"message"`
+	AccessToken  string `json:"accessToken"`
+	AccessExpire int64  `json:"accessExpire"`
+	RefreshAfter int64  `json:"refreshAfter"`
 }
 
 type RegisterReq struct {
@@ -28,8 +31,7 @@ type RegisterResp struct {
 }
 
 type UserInfoReq struct {
-	Id    int64 `json:"id"`
-	Token int64 `json:"token"`
+	Id int64 `json:"id"`
 }
 
 type UserInfoResp struct {

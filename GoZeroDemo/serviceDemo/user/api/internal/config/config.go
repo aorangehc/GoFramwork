@@ -14,4 +14,8 @@ type Config struct {
 		DataSource string // $user:$password@tcp($host:$port)/$dbname
 	}
 	CacheRedis cache.CacheConf
+	Auth       struct {
+		AccessSecret string
+		AccessExpire int64
+	}
 }

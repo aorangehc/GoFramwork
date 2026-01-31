@@ -10,6 +10,10 @@ Log:
   Level: info
   Stat: true
 
+Auth:
+  AccessSecret: "ILikeKabocha"
+  AccessExpire: 60 # 60秒
+
 Mysql:
   DataSource: "root:123456@tcp(127.0.0.1:3307)/user_order?charset=utf8mb4&parseTime=True&loc=Local"
 

@@ -30,9 +30,11 @@ func NewUserInfoLogic(ctx context.Context, svcCtx *svc.ServiceContext) *UserInfo
 
 func (l *UserInfoLogic) UserInfo(req *types.UserInfoReq) (resp *types.UserInfoResp, err error) {
 	// 参数校验
-	if req.Id == 0 || req.Token == 0 {
+	if req.Id == 0 {
 		return nil, fmt.Errorf("参数错误")
 	}
+
+	token := l.ctx.Value("payload")
 
 	// 获取数据
 	user, err := l.svcCtx.UserModel.FindOne(l.ctx, req.Id)
@@ -51,7 +53,7 @@ func (l *UserInfoLogic) UserInfo(req *types.UserInfoReq) (resp *types.UserInfoRe
 		UserName: user.Name.String,
 		Gender:   int(user.Gender),
 		Mobile:   user.Mobile,
-		Token:    "114514",
+		Token:    token.(string), // 这里输出的是 payload
 		NickName: user.Nickname,
 		CreateAt: user.CreateAt.Time.String(),
 		UpdateAt: user.UpdateAt.String(),
@@ -59,3 +61,5 @@ func (l *UserInfoLogic) UserInfo(req *types.UserInfoReq) (resp *types.UserInfoRe
 
 	return
 }
+
+// func (l *UserInfoLogic)
