@@ -7,6 +7,7 @@ import (
 	"context"
 	"fmt"
 
+	"gozeroservicedemo/order/api/internal/errorx"
 	"gozeroservicedemo/order/api/internal/interceptor"
 	"gozeroservicedemo/order/api/internal/svc"
 	"gozeroservicedemo/order/api/internal/types"
@@ -33,14 +34,14 @@ func NewDetailLogic(ctx context.Context, svcCtx *svc.ServiceContext) *DetailLogi
 func (l *DetailLogic) Detail(req *types.DetailReq) (resp *types.DetailResp, err error) {
 	// 根据订单号找到数据
 	if len(req.OrderSn) == 0 {
-		return nil, fmt.Errorf("参数错误")
+		return nil, errorx.NewDefaultCodeError("订单号不能为空")
 	}
 	order, err := l.svcCtx.OrderModel.FindOne(l.ctx, req.OrderSn)
 	if err == sqlx.ErrNotFound {
-		return nil, fmt.Errorf("订单不存在")
+		return nil, errorx.NewDefaultCodeError("订单不存在")
 	}
 	if err != nil {
-		return nil, fmt.Errorf("订单查询失败：%v", err)
+		return nil, errorx.NewDefaultCodeError(fmt.Sprintf("订单查询失败：%v", err))
 	}
 	l.ctx = context.WithValue(l.ctx, interceptor.CtxKeyAdminID, "123456")
 	// 根据其中的 user_id 调用 user 服务，获取用户信息
@@ -48,7 +49,7 @@ func (l *DetailLogic) Detail(req *types.DetailReq) (resp *types.DetailResp, err 
 		UserId: order.UserId,
 	})
 	if err != nil {
-		return nil, fmt.Errorf("获取用户信息失败：%v", err)
+		return nil, errorx.NewCodeError(errorx.RPCErrCODE, fmt.Sprintf("获取用户信息失败：%v", err))
 	}
 
 	fmt.Printf("订单用户信息：%+v\n", userInfo)
