@@ -5,6 +5,7 @@ package svc
 
 import (
 	"gozeroservicedemo/order/api/internal/config"
+	"gozeroservicedemo/order/api/internal/interceptor"
 	"gozeroservicedemo/order/sql/model"
 	"gozeroservicedemo/user/rpc/user"
 
@@ -20,7 +21,7 @@ type ServiceContext struct {
 
 func NewServiceContext(c config.Config) *ServiceContext {
 	sqlxConn := sqlx.NewMysql(c.Mysql.DataSource)
-	userConn := zrpc.MustNewClient(c.UserRpc).Conn()
+	userConn := zrpc.MustNewClient(c.UserRpc, zrpc.WithUnaryClientInterceptor(interceptor.AorangeInterceptor)).Conn()
 	return &ServiceContext{
 		Config:     c,
 		UserRpc:    user.NewUserServiceClient(userConn),

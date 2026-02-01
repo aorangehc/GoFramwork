@@ -5,6 +5,7 @@ import (
 	"fmt"
 
 	"gozeroservicedemo/user/rpc/internal/config"
+	"gozeroservicedemo/user/rpc/internal/intereptor"
 	"gozeroservicedemo/user/rpc/internal/server"
 	"gozeroservicedemo/user/rpc/internal/svc"
 	"gozeroservicedemo/user/rpc/user"
@@ -35,6 +36,8 @@ func main() {
 	})
 	consul.RegisterService(c.ListenOn, c.Consul)
 	defer s.Stop()
+
+	s.AddUnaryInterceptors(intereptor.MyInterceptor)
 
 	fmt.Printf("Starting rpc server at %s...\n", c.ListenOn)
 	s.Start()

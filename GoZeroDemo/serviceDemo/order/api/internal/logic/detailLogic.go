@@ -7,6 +7,7 @@ import (
 	"context"
 	"fmt"
 
+	"gozeroservicedemo/order/api/internal/interceptor"
 	"gozeroservicedemo/order/api/internal/svc"
 	"gozeroservicedemo/order/api/internal/types"
 	"gozeroservicedemo/user/rpc/user"
@@ -41,6 +42,7 @@ func (l *DetailLogic) Detail(req *types.DetailReq) (resp *types.DetailResp, err 
 	if err != nil {
 		return nil, fmt.Errorf("订单查询失败：%v", err)
 	}
+	l.ctx = context.WithValue(l.ctx, interceptor.CtxKeyAdminID, "123456")
 	// 根据其中的 user_id 调用 user 服务，获取用户信息
 	userInfo, err := l.svcCtx.UserRpc.GetUserInfo(l.ctx, &user.GetUserInfoRequest{
 		UserId: order.UserId,
