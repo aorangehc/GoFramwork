@@ -53,7 +53,6 @@ func (l *UserUpdateLogic) UserUpdate(req *types.UserUpdateReq) (resp *types.User
 	user := &cachemodel.User{
 		Id:       req.Id,
 		Name:     sql.NullString{String: req.UserName, Valid: true},
-		Password: req.Password,
 		Nickname: req.NickName,
 		Gender:   int64(req.Gender),
 		Mobile:   req.Mobile,
