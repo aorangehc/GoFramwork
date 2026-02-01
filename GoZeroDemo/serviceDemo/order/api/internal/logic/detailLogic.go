@@ -42,9 +42,15 @@ func (l *DetailLogic) Detail(req *types.DetailReq) (resp *types.DetailResp, err 
 		return nil, fmt.Errorf("订单查询失败：%v", err)
 	}
 	// 根据其中的 user_id 调用 user 服务，获取用户信息
-	l.svcCtx.UserRpc.GetUserInfo(l.ctx, &user.GetUserInfoRequest{
+	userInfo, err := l.svcCtx.UserRpc.GetUserInfo(l.ctx, &user.GetUserInfoRequest{
 		UserId: order.UserId,
 	})
+	if err != nil {
+		return nil, fmt.Errorf("获取用户信息失败：%v", err)
+	}
+
+	fmt.Printf("订单用户信息：%+v\n", userInfo)
+
 	// 拼接返回结果
 
 	return &types.DetailResp{
