@@ -5,11 +5,14 @@ package logic
 
 import (
 	"context"
+	"fmt"
 
 	"gozeroservicedemo/order/api/internal/svc"
 	"gozeroservicedemo/order/api/internal/types"
+	"gozeroservicedemo/user/rpc/user"
 
 	"github.com/zeromicro/go-zero/core/logx"
+	"github.com/zeromicro/go-zero/core/stores/sqlx"
 )
 
 type DetailLogic struct {
@@ -27,7 +30,30 @@ func NewDetailLogic(ctx context.Context, svcCtx *svc.ServiceContext) *DetailLogi
 }
 
 func (l *DetailLogic) Detail(req *types.DetailReq) (resp *types.DetailResp, err error) {
-	// todo: add your logic here and delete this line
+	// 根据订单号找到数据
+	if len(req.OrderSn) == 0 {
+		return nil, fmt.Errorf("参数错误")
+	}
+	order, err := l.svcCtx.OrderModel.FindOne(l.ctx, req.OrderSn)
+	if err == sqlx.ErrNotFound {
+		return nil, fmt.Errorf("订单不存在")
+	}
+	if err != nil {
+		return nil, fmt.Errorf("订单查询失败：%v", err)
+	}
+	// 根据其中的 user_id 调用 user 服务，获取用户信息
+	l.svcCtx.UserRpc.GetUserInfo(l.ctx, &user.GetUserInfoRequest{
+		UserId: order.UserId,
+	})
+	// 拼接返回结果
 
-	return
+	return &types.DetailResp{
+		OrderSn:  order.OrderSn,
+		UserId:   order.UserId,
+		GoodsId:  order.GoodsId,
+		Num:      order.Num,
+		Amount:   order.Amount,
+		Status:   order.Status,
+		CreateAt: order.CreateAt.String(),
+	}, nil
 }
